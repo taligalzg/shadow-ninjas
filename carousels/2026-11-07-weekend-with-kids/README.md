@@ -1,4 +1,4 @@
-# Weekend With Kids | South Florida: November 7–8, 2026
+# This Weekend With the Kids | South Florida: November 7–8, 2026
 
 Instagram carousel for @taligal.parenting. It has 10 slides, each 1080 × 1350 (4:5), in `slides/01.png` to `slides/10.png`.
 

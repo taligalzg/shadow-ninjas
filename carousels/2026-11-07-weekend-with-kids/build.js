@@ -60,7 +60,7 @@ function stars() {
 const art = {
   cover: `<svg viewBox="0 0 900 420" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
     <circle cx="450" cy="300" r="150" fill="${C.orange}" opacity=".9"/>
-    <rect x="0" y="300" width="900" height="120" fill="${C.sand}"/>
+    <rect x="0" y="300" width="900" height="160" rx="28" fill="${C.sand}"/>
     <path d="M60 318 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" ${S}/>
     <path d="M120 352 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" ${S} opacity=".55"/>
     <path d="M200 386 q40 -16 80 0 t80 0 t80 0 t80 0 t80 0 t80 0" ${S} opacity=".3"/>
@@ -226,7 +226,7 @@ h1 .o{color:${C.orange}}
 function shell(n, inner, extraClass = '') {
   return `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
   <div class="slide ${extraClass}">
-    <div class="top"><span>Weekend with kids<span class="dot"></span>Nov 7–8</span><span class="num">${String(n).padStart(2,'0')} / ${TOTAL}</span></div>
+    <div class="top"><span>This weekend with the kids<span class="dot"></span>Nov 7–8</span><span class="num">${String(n).padStart(2,'0')} / ${TOTAL}</span></div>
     ${inner}
     <div class="handle">@taligal.parenting</div>
   </div></body></html>`;
@@ -254,24 +254,30 @@ function event(n, o) {
 // ---------- slides ----------
 const slides = [];
 
-// 1 — Cover
-slides.push(shell(1, `
-  <style>
-    .cover-art{margin-top:30px;height:430px;border-radius:30px;background:${C.sand};overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
-    .cover-art svg{width:100%;height:100%}
-    .ct{margin-top:46px;font-weight:900;font-size:150px;line-height:.86;letter-spacing:-.02em;text-transform:uppercase}
-    .ct .o{color:${C.orange}}
-    .cs{margin-top:26px;font-size:46px;display:flex;align-items:center;gap:18px}
-    .cs .bar{width:56px;height:5px;background:${C.orange};border-radius:3px}
-    .cd{margin-top:26px;font-size:32px;line-height:1.3;font-weight:600;max-width:820px}
-    .swipe{position:absolute;right:72px;bottom:120px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:22px;letter-spacing:.18em;text-transform:uppercase;color:${C.orange}}
-  </style>
-  <div class="cover-art">${art.cover}</div>
-  <div class="ct">Weekend<br>with <span class="o">kids</span></div>
-  <div class="cs"><span class="bar"></span><span class="serif">South Florida&nbsp; | &nbsp;November 7–8</span></div>
+// 1 — Cover (matches the "This Weekend With the Kids" series cover)
+slides.push(`<!doctype html><html><head><meta charset="utf-8"><style>${css}
+  .cv{align-items:center;text-align:center;padding:96px 72px 0}
+  .t1{font-weight:900;font-size:112px;line-height:.9;letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap}
+  .rib{margin-top:20px;background:${C.orange};color:#fff;font-weight:900;font-size:84px;line-height:1;text-transform:uppercase;padding:14px 40px 20px;border-radius:14px;transform:rotate(-2.5deg);box-shadow:0 10px 0 ${C.terracotta}}
+  .pill{margin-top:44px;background:${C.charcoal};color:${C.cream};font-weight:800;font-size:32px;padding:12px 30px 14px;border-radius:999px}
+  .cvart{margin-top:40px;width:100%;flex:1 1 auto;min-height:200px;display:flex;align-items:center;justify-content:center}
+  .cvart svg{width:auto;height:100%;max-width:100%;aspect-ratio:900/420;overflow:hidden}
+  .cd{font-size:31px;line-height:1.3;font-weight:600;max-width:820px;margin-bottom:22px}
+  .tags{display:flex;gap:12px;justify-content:center;margin-bottom:130px;flex-wrap:wrap}
+  .tags span{border:2.5px solid ${C.charcoal};border-radius:999px;padding:6px 18px 8px;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+  .tags span.o{background:${C.orange};border-color:${C.orange};color:#fff}
+  .swipe{position:absolute;right:72px;bottom:44px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.18em;text-transform:uppercase;color:${C.orange}}
+</style></head><body>
+<div class="slide cv">
+  <div class="t1">This weekend</div>
+  <div class="rib">With the kids</div>
+  <div class="pill">South Florida · Nov 7 – 8</div>
+  <div class="cvart">${art.cover}</div>
   <div class="cd">Fun family events, unique experiences &amp; sensory-friendly activities!</div>
-  <div class="swipe">Swipe <svg width="40" height="20" viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h34M28 3l8 7-8 7"/></svg></div>
-`));
+  <div class="tags"><span>Free picks</span><span>Drone show</span><span class="o">Sensory-friendly</span></div>
+  <div class="handle">@taligal.parenting</div>
+  <div class="swipe">Swipe <svg width="36" height="18" viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h34M28 3l8 7-8 7"/></svg></div>
+</div></body></html>`);
 
 // 2 — Drone show
 slides.push(event(2, {
