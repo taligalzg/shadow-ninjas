@@ -489,6 +489,26 @@ slides.push(shell(10, `
     await page.screenshot({ path: path.join(OUT, `${String(i + 1).padStart(2, '0')}.png`) });
     fs.unlinkSync(html);
   }
-  await browser.close();
   console.log(`Rendered ${slides.length} slides to ${OUT}`);
+
+  // Reel frames (1080 x 1920): same slides, centered a little high so
+  // Instagram's caption and buttons at the bottom don't cover them.
+  const REEL = path.join(DIR, 'reel', 'frames');
+  fs.mkdirSync(REEL, { recursive: true });
+  const reelCss = `<style>
+    html,body{height:1920px;background:${C.cream};background-image:${noise}}
+    .slide{background:none;margin-top:230px}
+    .swipe{display:none}
+  </style></head>`;
+  const rp = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
+  for (let i = 0; i < slides.length; i++) {
+    const html = path.join(DIR, `.reel-${i + 1}.html`);
+    fs.writeFileSync(html, slides[i].replace('</head>', reelCss));
+    await rp.goto('file://' + html);
+    await rp.evaluate(() => document.fonts.ready);
+    await rp.screenshot({ path: path.join(REEL, `${String(i + 1).padStart(2, '0')}.png`) });
+    fs.unlinkSync(html);
+  }
+  await browser.close();
+  console.log(`Rendered ${slides.length} reel frames to ${REEL}`);
 })();

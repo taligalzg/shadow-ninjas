@@ -37,3 +37,10 @@ The cloud session couldn't open the organizers' websites directly. I checked the
 
 ### Images
 These slides use original line drawings, not photos. I had no photos with permission to use. The drawings have no religious symbols. The Diwali slide uses string lights.
+
+## Reel version
+
+- `reel/weekend-with-the-kids-nov7-8.mp4`: 1080 × 1920 (9:16), 30 fps, about 39 seconds. It's silent: Tali adds music in the Instagram app. Same 10 slides with a soft 0.35s fade between them. The special needs slide stays on screen longest (6.5s).
+- `reel/reel-cover.png`: a 9:16 cover image to upload as the Reel's cover.
+- The slides sit a little above the middle of the screen, so Instagram's caption and buttons don't cover them. The title also stays whole when the grid crops the cover to 3:4.
+- To rebuild: `node build.js && reel/make_reel.sh`
