@@ -9,8 +9,8 @@ export const Stage: React.FC<{f: number; z?: number; fx?: number; fy?: number; c
   <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{display: 'block', position: 'absolute', inset: 0}}>
     <defs>
       <filter id={`${id}w`} filterUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
-        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves={2} seed={(Math.floor(f / 6) % 4) + 2} result="n" />
-        <feDisplacementMap in="SourceGraphic" in2="n" scale={5} xChannelSelector="R" yChannelSelector="G" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves={2} seed={(Math.floor(f / 5) % 3) + 2} result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale={7} xChannelSelector="R" yChannelSelector="G" />
       </filter>
       <filter id={`${id}g`} filterUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
         <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves={3} seed={7} />
@@ -21,6 +21,9 @@ export const Stage: React.FC<{f: number; z?: number; fx?: number; fy?: number; c
         <stop offset="0.55" stopColor="#FFF2D0" stopOpacity="0" />
         <stop offset="1" stopColor="#2B2233" stopOpacity="0.45" />
       </linearGradient>
+      <filter id="ps" x="-25%" y="-25%" width="150%" height="160%">
+        <feDropShadow dx={0} dy={5} stdDeviation={3.5} floodColor="#2A1E14" floodOpacity={0.34} />
+      </filter>
       <radialGradient id={`${id}v`} cx="0.5" cy="0.5" r="0.75">
         <stop offset="0.6" stopColor="#3A2A1E" stopOpacity="0" />
         <stop offset="1" stopColor="#3A2A1E" stopOpacity="0.28" />
@@ -32,7 +35,7 @@ export const Stage: React.FC<{f: number; z?: number; fx?: number; fy?: number; c
     </g>
     <rect width={W} height={H} fill={`url(#${id}l)`} style={{mixBlendMode: 'soft-light'}} />
     <rect width={W} height={H} fill={`url(#${id}v)`} />
-    <rect width={W} height={H} filter={`url(#${id}g)`} opacity={0.3} style={{mixBlendMode: 'multiply'}} />
+    <rect width={W} height={H} filter={`url(#${id}g)`} opacity={0.42} style={{mixBlendMode: 'multiply'}} />
   </svg>
 );
 
@@ -74,7 +77,7 @@ const ClassroomBG: React.FC<{warm?: number}> = ({warm = 0}) => (
     {/* clock */}
     <circle cx={655} cy={150} r={36} fill="#F4EEE2" stroke="#6C5846" strokeWidth={6} />
     <path d="M 655,150 v -22 M 655,150 l 16,8" stroke="#4A3C30" strokeWidth={5} strokeLinecap="round" />
-    <polygon points="738,610 992,610 1180,960 620,960" fill="#FFF3CF" opacity={0.1 + warm * 0.25} />
+    <polygon filter="url(#ps)" points="738,610 992,610 1180,960 620,960" fill="#FFF3CF" opacity={0.1 + warm * 0.25} />
   </g>
 );
 
@@ -190,17 +193,17 @@ export const SceneStruggle: React.FC<{f: number}> = ({f}) => {
       {/* desk with visible top */}
       <rect x={176} y={800} width={18} height={220} fill="#8F6238" />
       <rect x={886} y={800} width={18} height={220} fill="#8F6238" />
-      <polygon points="190,702 890,702 950,764 130,764" fill="#D6A066" />
+      <polygon filter="url(#ps)" points="190,702 890,702 950,764 130,764" fill="#D6A066" />
       <rect x={130} y={764} width={820} height={40} rx={6} fill="#B67F47" />
-      <polygon points="430,712 640,712 660,754 420,754" fill="#FBF8F1" />
+      <polygon filter="url(#ps)" points="430,712 640,712 660,754 420,754" fill="#FBF8F1" />
       <g fill="#B9B3A6">
-        <polygon points="452,722 560,722 562,727 451,727" />
-        <polygon points="449,734 610,734 612,739 448,739" />
+        <polygon filter="url(#ps)" points="452,722 560,722 562,727 451,727" />
+        <polygon filter="url(#ps)" points="449,734 610,734 612,739 448,739" />
       </g>
       {/* pencil */}
       <g transform={`translate(${px},${py}) rotate(${-12 + roll * 30 + fall * 210})`}>
         <rect x={-46} y={-6} width={78} height={12} rx={2} fill="#EBB93A" />
-        <polygon points="32,-6 50,0 32,6" fill="#EBD3A8" />
+        <polygon filter="url(#ps)" points="32,-6 50,0 32,6" fill="#EBD3A8" />
         <rect x={-56} y={-6} width={12} height={12} rx={3} fill="#D98B86" />
       </g>
       <FigArms {...fig} />
@@ -231,7 +234,7 @@ const FigArms: React.FC<any> = (p) => {
     if (p.sleeve === 'short') {
       const mid: [number, number] = [lerp(s0[0], a.e[0], 0.62), lerp(s0[1], a.e[1], 0.62)];
       return (
-        <g>
+        <g filter="url(#ps)">
           <Limb pts={[mid, a.e, a.h]} w={aw - 8} color={skin} />
           <circle cx={a.h[0]} cy={a.h[1]} r={aw * 0.5} fill={skin} />
           <Limb pts={[s0, mid]} w={aw} color={fill} />
@@ -239,7 +242,7 @@ const FigArms: React.FC<any> = (p) => {
       );
     }
     return (
-      <g>
+      <g filter="url(#ps)">
         <Limb pts={[s0, a.e, a.h]} w={aw} color={fill} />
         <circle cx={a.h[0]} cy={a.h[1]} r={aw * 0.5} fill={skin} />
       </g>
@@ -306,7 +309,7 @@ const HomeBG: React.FC<{lamp?: number}> = ({lamp = 0}) => (
 );
 
 const Backpack: React.FC<{x: number; y: number; rot: number}> = ({x, y, rot}) => (
-  <g transform={`translate(${x},${y}) rotate(${rot})`}>
+  <g filter="url(#ps)" transform={`translate(${x},${y}) rotate(${rot})`}>
     <path d="M -30,-74 q 30,-34 60,0" stroke={shade(C.orange, -0.18)} strokeWidth={11} fill="none" strokeLinecap="round" />
     <rect x={-56} y={-74} width={112} height={140} rx={34} fill={C.orange} />
     <rect x={-38} y={-10} width={76} height={56} rx={14} fill={shade(C.orange, -0.1)} />
@@ -467,13 +470,13 @@ export const SceneAdvocate: React.FC<{f: number}> = ({f}) => {
       <FigNoArms {...mom} />
       <FigNoArms {...teacher} />
       {/* table */}
-      <polygon points="90,610 990,610 1100,700 -20,700" fill="#C99158" />
+      <polygon filter="url(#ps)" points="90,610 990,610 1100,700 -20,700" fill="#C99158" />
       <rect x={-20} y={700} width={1120} height={42} fill="#A9753F" />
       <rect x={60} y={742} width={960} height={400} fill="#8C6238" />
       {/* folder & plan */}
-      <polygon points="400,622 690,622 716,690 380,690" fill="#EB9A6E" />
-      <polygon points="418,626 540,626 544,684 404,684" fill="#FBF8F1" />
-      <polygon points="552,626 674,626 694,684 556,684" fill="#FBF8F1" />
+      <polygon filter="url(#ps)" points="400,622 690,622 716,690 380,690" fill="#EB9A6E" />
+      <polygon filter="url(#ps)" points="418,626 540,626 544,684 404,684" fill="#FBF8F1" />
+      <polygon filter="url(#ps)" points="552,626 674,626 694,684 556,684" fill="#FBF8F1" />
       <g fill="#B9B3A6">
         <rect x={428} y={638} width={90} height={5} rx={2} />
         <rect x={426} y={652} width={70} height={5} rx={2} />
@@ -508,7 +511,7 @@ export const SceneNewSchool: React.FC<{f: number}> = ({f}) => {
       <rect x={1000} y={480} width={24} height={200} fill="#7B5A3B" />
       {/* school */}
       <rect x={170} y={150} width={740} height={500} fill="#EBCB9E" />
-      <polygon points="140,160 540,40 940,160" fill="#C9744C" />
+      <polygon filter="url(#ps)" points="140,160 540,40 940,160" fill="#C9744C" />
       {[230, 740].map((x) => (
         <g key={x}>
           <rect x={x} y={230} width={120} height={140} rx={8} fill="#F8EFD9" />
@@ -535,7 +538,7 @@ export const SceneNewSchool: React.FC<{f: number}> = ({f}) => {
       />
       {/* path */}
       <rect x={-600} y={650} width={W + 1200} height={700} fill="#A9BF8A" />
-      <polygon points="430,650 650,650 900,1100 180,1100" fill="#F0E2C8" />
+      <polygon filter="url(#ps)" points="430,650 650,650 900,1100 180,1100" fill="#F0E2C8" />
       {/* mother and son, from behind */}
       <Figure
         x={430}
@@ -621,7 +624,7 @@ export const SceneSupported: React.FC<{f: number}> = ({f}) => {
       <circle cx={150} cy={180} r={52} fill="#FFF4D0" />
       <path d="M 78,340 q 70,-50 150,-10 t 144,-14 v 96 h -294 z" fill="#A9BF8A" />
       <rect x={219} y={108} width={12} height={304} fill="#F8EFD9" />
-      <polygon points="78,412 372,412 700,960 200,960" fill="#FFF3CF" opacity={0.22} />
+      <polygon filter="url(#ps)" points="78,412 372,412 700,960 200,960" fill="#FFF3CF" opacity={0.22} />
       {/* bunting */}
       <path d="M 380,60 Q 720,130 1090,50" stroke="#8A7A66" strokeWidth={3} fill="none" />
       {[430, 510, 592, 676, 760, 846, 934, 1020].map((x, i) => (
@@ -649,10 +652,10 @@ export const SceneSupported: React.FC<{f: number}> = ({f}) => {
       {/* desk */}
       <rect x={380} y={730} width={18} height={300} fill="#A9753F" />
       <rect x={922} y={730} width={18} height={300} fill="#A9753F" />
-      <polygon points="390,640 930,640 990,704 330,704" fill="#DDB07A" />
+      <polygon filter="url(#ps)" points="390,640 930,640 990,704 330,704" fill="#DDB07A" />
       <rect x={330} y={704} width={660} height={36} rx={6} fill="#BC8B52" />
       {/* step card */}
-      <polygon points="420,650 540,650 536,694 404,694" fill="#F8EFD9" />
+      <polygon filter="url(#ps)" points="420,650 540,650 536,694 404,694" fill="#F8EFD9" />
       {[0, 1, 2].map((i) => (
         <g key={i}>
           <circle cx={432 + i * 2 - 4} cy={660 + i * 12} r={4.5} fill={C.orange} />
@@ -660,7 +663,7 @@ export const SceneSupported: React.FC<{f: number}> = ({f}) => {
         </g>
       ))}
       {/* his work */}
-      <polygon points="600,650 780,650 800,696 592,696" fill="#FBF8F1" />
+      <polygon filter="url(#ps)" points="600,650 780,650 800,696 592,696" fill="#FBF8F1" />
       {[0, 1, 2].map((i) => (
         <g key={i}>
           <rect x={620 + i} y={659 + i * 12} width={96} height={5} rx={2} fill="#B9B3A6" />
@@ -668,7 +671,7 @@ export const SceneSupported: React.FC<{f: number}> = ({f}) => {
         </g>
       ))}
       <g transform={`translate(830,668) scale(${ease((f - 82) / 12) * (1 + Math.sin(f / 5) * 0.05)})`}>
-        <polygon points="0,-30 9,-9 31,-9 13,5 20,27 0,13 -20,27 -13,5 -31,-9 -9,-9" fill="#F2B632" />
+        <polygon filter="url(#ps)" points="0,-30 9,-9 31,-9 13,5 20,27 0,13 -20,27 -13,5 -31,-9 -9,-9" fill="#F2B632" />
       </g>
       <FigArms {...t} />
       <FigArms {...boy} />
@@ -785,13 +788,13 @@ export const OfficeScene: React.FC<{f: number; hopeful: boolean; cam: {z: number
       <FigNoArms {...B} />
       <FigNoArms {...hero} />
       {/* table */}
-      <polygon points="70,612 1010,612 1120,704 -40,704" fill={hopeful ? '#C99A66' : '#B08A68'} />
+      <polygon filter="url(#ps)" points="70,612 1010,612 1120,704 -40,704" fill={hopeful ? '#C99A66' : '#B08A68'} />
       <rect x={-40} y={704} width={1160} height={44} fill={hopeful ? '#A9763F' : '#8E6E52'} />
       <rect x={-40} y={748} width={1160} height={400} fill={hopeful ? '#8A5F36' : '#6F5846'} />
-      <polygon points="270,630 400,630 410,676 262,676" fill="#FBF8F1" />
+      <polygon filter="url(#ps)" points="270,630 400,630 410,676 262,676" fill="#FBF8F1" />
       <rect x={556} y={618} width={120} height={62} rx={8} fill="#5B5F66" />
-      <polygon points="548,680 684,680 696,696 536,696" fill="#7A7F87" />
-      <polygon points="850,634 960,634 972,680 846,680" fill="#FBF8F1" />
+      <polygon filter="url(#ps)" points="548,680 684,680 696,696 536,696" fill="#7A7F87" />
+      <polygon filter="url(#ps)" points="850,634 960,634 972,680 846,680" fill="#FBF8F1" />
       <rect x={868} y={646} width={70} height={5} rx={2} fill="#B9B3A6" />
       <rect x={868} y={660} width={52} height={5} rx={2} fill="#B9B3A6" />
       <rect x={690} y={630} width={44} height={40} rx={8} fill={C.orange} opacity={0.9} />

@@ -45,6 +45,6 @@ Rendering uses the Chromium at `/opt/pw-browsers/chromium` (see `remotion.config
 
 ## Known gap: illustration style
 
-No character references or previous artwork (SOME KIDS FEEL BIG carousel, Superhero Project) were available in this repository or the connected Drive, and no illustration tool was available in the build environment. The characters are drawn in code from the written brief. They are consistent across scenes, but they are a flat illustrated style, not the richer storybook painting of the earlier work.
+No character references or previous artwork (SOME KIDS FEEL BIG carousel, Superhero Project) were available in this repository or the connected Drive, and no illustration tool was available in the build environment. The characters are drawn in code from the written brief. They are consistent across scenes and use a layered paper cut-out look (drop shadows, rough hand-cut edges, paper grain), chosen as a look of its own instead of matching the earlier work.
 
 To swap in real artwork: each scene in `src/scenes.tsx` is a self-contained component drawn on a 1080 × 960 canvas. Replace its contents with layered PNGs (background, characters, moving parts) and the timing, text, transitions and music stay as they are.

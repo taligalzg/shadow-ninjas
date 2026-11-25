@@ -261,14 +261,14 @@ export const Head: React.FC<HeadProps> = ({
       </g>
       {/* hair on top */}
       {style === 'boy' && (
-        <g transform={child ? undefined : 'scale(0.9,0.97)'}>
+        <g filter="url(#ps)" transform={child ? undefined : 'scale(0.9,0.97)'}>
           <path d={HAIR.boy} fill={hair} />
           <path d={HAIR.cowlick} fill={hair} />
           <path d="M -60,-92 q 26,-22 58,-14 M 10,-96 q 30,-10 52,12 M -30,-70 q 14,-10 30,-6" stroke={shade(hair, 0.1)} strokeWidth={4} fill="none" strokeLinecap="round" opacity={0.7} />
         </g>
       )}
       {style === 'bun' && (
-        <g>
+        <g filter="url(#ps)">
           <path d={HAIR.bun} fill={hair} />
           <path d="M -50,-88 q 30,-20 70,-10 M -70,-50 q 30,-24 66,-26" stroke={shade(hair, 0.1)} strokeWidth={4} fill="none" strokeLinecap="round" opacity={0.6} />
         </g>
@@ -361,7 +361,7 @@ export const Figure: React.FC<FigureProps> = ({
     if (sleeve === 'short') {
       const mid: P = [lerp(s0[0], a.e[0], 0.62), lerp(s0[1], a.e[1], 0.62)];
       return (
-        <g>
+        <g filter="url(#ps)">
           <Limb pts={[mid, a.e, a.h]} w={aw - 8} color={skin} />
           <circle cx={a.h[0]} cy={a.h[1]} r={aw * 0.5} fill={skin} />
           <Limb pts={[s0, mid]} w={aw} color={fill} />
@@ -369,7 +369,7 @@ export const Figure: React.FC<FigureProps> = ({
       );
     }
     return (
-      <g>
+      <g filter="url(#ps)">
         <Limb pts={[s0, a.e, a.h]} w={aw} color={fill} />
         <circle cx={a.h[0]} cy={a.h[1]} r={aw * 0.5} fill={skin} />
       </g>
@@ -388,7 +388,7 @@ export const Figure: React.FC<FigureProps> = ({
         </linearGradient>
       </defs>
       {legs && (
-        <g>
+        <g filter="url(#ps)">
           <Limb pts={[[-w * 0.2, h - 10], legs.l]} w={aw + 6} color={legs.color ?? C.jeans} />
           <Limb pts={[[w * 0.2, h - 10], legs.r]} w={aw + 6} color={legs.color ?? C.jeans} />
           <ellipse cx={legs.l[0] - 8} cy={legs.l[1] + aw * 0.35} rx={aw * 0.85} ry={aw * 0.48} fill={legs.shoe ?? '#E8E2D6'} />
@@ -400,7 +400,7 @@ export const Figure: React.FC<FigureProps> = ({
       {(() => {
         const d = `M ${-w / 2},36 Q ${-w / 2},0 ${-w / 2 + 40},0 L ${w / 2 - 40},0 Q ${w / 2},0 ${w / 2},36 L ${w * 0.46},${h} L ${-w * 0.46},${h} Z`;
         return (
-          <g>
+          <g filter="url(#ps)">
             <path d={d} fill={fill} />
             <path d={d} fill={`url(#${id}sh)`} />
           </g>
@@ -427,7 +427,7 @@ export const Figure: React.FC<FigureProps> = ({
           <path d={`M ${-w * 0.12},14 q ${w * 0.12},-26 ${w * 0.24},0`} stroke={shade(C.orange, -0.15)} strokeWidth={9} fill="none" strokeLinecap="round" />
         </g>
       )}
-      <g transform={`translate(${headDx},${-100 + headDy}) rotate(${headTilt}) scale(${hs})`}>
+      <g filter="url(#ps)" transform={`translate(${headDx},${-100 + headDy}) rotate(${headTilt}) scale(${hs})`}>
         <Head kind={kind} back={back} {...head} />
       </g>
       {!noArms && arm(dL, -1)}
@@ -438,7 +438,7 @@ export const Figure: React.FC<FigureProps> = ({
 
 // ---------- furniture & props ----------
 export const Desk: React.FC<{x: number; y: number; w: number; h?: number; legH?: number; color?: string}> = ({x, y, w, h = 30, legH = 150, color = '#C99158'}) => (
-  <g>
+  <g filter="url(#ps)">
     <ellipse cx={x} cy={y + h + legH} rx={w * 0.62} ry={16} fill="#3A2A1E" opacity={0.16} />
     <rect x={x - w / 2 + 14} y={y + h} width={14} height={legH} fill={shade(color, -0.22)} />
     <rect x={x + w / 2 - 28} y={y + h} width={14} height={legH} fill={shade(color, -0.22)} />
@@ -449,7 +449,7 @@ export const Desk: React.FC<{x: number; y: number; w: number; h?: number; legH?:
 );
 
 export const Paper: React.FC<{x: number; y: number; w: number; h: number; rot?: number; lines?: number; children?: React.ReactNode}> = ({x, y, w, h, rot = 0, lines = 4, children}) => (
-  <g transform={`translate(${x},${y}) rotate(${rot})`}>
+  <g filter="url(#ps)" transform={`translate(${x},${y}) rotate(${rot})`}>
     <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={3} fill="#FBF8F1" />
     {Array.from({length: lines}).map((_, i) => (
       <rect key={i} x={-w * 0.36} y={-h * 0.3 + (i * h * 0.62) / Math.max(1, lines - 1) - 2} width={w * (i % 2 ? 0.55 : 0.72)} height={Math.max(3, h * 0.045)} rx={2} fill="#B9B3A6" />
@@ -459,7 +459,7 @@ export const Paper: React.FC<{x: number; y: number; w: number; h: number; rot?: 
 );
 
 export const Plant: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => (
-  <g transform={`translate(${x},${y}) scale(${s})`}>
+  <g filter="url(#ps)" transform={`translate(${x},${y}) scale(${s})`}>
     {[-38, -18, 0, 20, 40].map((a, i) => (
       <path key={i} d="M 0,0 C -16,-50 -10,-96 0,-124 C 12,-96 16,-50 0,0 Z" fill={i % 2 ? '#5E9A63' : '#4C8553'} transform={`rotate(${a}) scale(${1 - Math.abs(a) / 160})`} />
     ))}
@@ -476,7 +476,7 @@ export const Bubble: React.FC<{x: number; y: number; p: number; flip?: boolean; 
   const k = ease(p);
   if (k <= 0) return null;
   return (
-    <g transform={`translate(${x},${y}) scale(${0.6 + 0.4 * k})`} opacity={k}>
+    <g filter="url(#ps)" transform={`translate(${x},${y}) scale(${0.6 + 0.4 * k})`} opacity={k}>
       <path d={`M -70,-46 Q -70,-70 -46,-70 L 46,-70 Q 70,-70 70,-46 L 70,-10 Q 70,14 46,14 L ${flip ? 10 : -10},14 L ${flip ? 30 : -30},40 L ${flip ? -14 : 14},14 L -46,14 Q -70,14 -70,-10 Z`} fill={warm ? '#FFF6E6' : '#FBF8F1'} stroke={warm ? C.orange : 'none'} strokeWidth={warm ? 4 : 0} />
       {children ?? (
         <g fill="#9E9A91">
