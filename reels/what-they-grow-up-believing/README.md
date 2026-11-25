@@ -17,10 +17,12 @@ Animated Instagram Reel for @taligal.parenting. Draft for approval. Nothing here
 npm install
 npx remotion studio src/index.ts          # live preview / scrub
 python3 make_music.py                     # rebuild the music (needs numpy)
-npm run render                            # full render to out/raw.mp4
+npx remotion render src/index.ts Episode1 out/seq --sequence --image-format=jpeg --jpeg-quality=96
+./fix_frames.sh                           # re-renders any single broken frames until the scan is clean
+# then encode out/seq + public/music.wav with ffmpeg (H.264, yuv420p, 30 fps)
 ```
 
-Rendering uses the Chromium at `/opt/pw-browsers/chromium` (see `remotion.config.ts`). Change that path on another machine, or delete the line to let Remotion download its own.
+The renderer occasionally produces a single broken frame during dissolves, so render to an image sequence and run `fix_frames.sh` before encoding. Rendering uses the Chromium at `/opt/pw-browsers/chromium` (see `remotion.config.ts`). Change that path on another machine, or delete the line to let Remotion download its own.
 
 ## Where things are
 
