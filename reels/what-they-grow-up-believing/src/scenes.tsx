@@ -53,7 +53,7 @@ const Planks: React.FC<{y: number; color: string}> = ({y, color}) => (
 );
 
 // ---------- classroom (old) ----------
-const ClassroomBG: React.FC<{warm?: number}> = ({warm = 0}) => (
+const ClassroomBG: React.FC<{warm?: number; clock?: number}> = ({warm = 0, clock = 0}) => (
   <g>
     <rect x={-600} y={-400} width={W + 1200} height={1010} fill="#D9CEBC" />
     <rect x={-600} y={470} width={W + 1200} height={140} fill="#C9BBA4" />
@@ -69,18 +69,33 @@ const ClassroomBG: React.FC<{warm?: number}> = ({warm = 0}) => (
     <rect x={430} y={376} width={40} height={10} rx={3} fill="#F4F0E6" />
     {/* window */}
     <rect x={720} y={96} width={290} height={340} rx={8} fill="#F1E9DA" />
-    <rect x={738} y={114} width={254} height={304} fill={warm > 0.5 ? '#F6DDA6' : '#BFD2D8'} />
-    <circle cx={930} cy={190} r={warm > 0.5 ? 46 : 0} fill="#FFF1C9" />
-    <path d="M 738,340 q 60,-50 130,-10 t 124,-10 v 98 h -254 z" fill={warm > 0.5 ? '#A9BF8A' : '#9DB2A2'} />
+    <rect x={738} y={114} width={254} height={304} fill="#BFD2D8" />
+    <rect x={738} y={114} width={254} height={304} fill="#F6DDA6" opacity={warm} />
+    <circle cx={930} cy={190} r={46} fill="#FFF1C9" opacity={warm} />
+    <path d="M 738,340 q 60,-50 130,-10 t 124,-10 v 98 h -254 z" fill="#9DB2A2" />
+    <path d="M 738,340 q 60,-50 130,-10 t 124,-10 v 98 h -254 z" fill="#A9BF8A" opacity={warm} />
     <rect x={858} y={114} width={12} height={304} fill="#F1E9DA" />
     <rect x={738} y={258} width={254} height={12} fill="#F1E9DA" />
     {/* clock */}
     <circle cx={655} cy={150} r={36} fill="#F4EEE2" stroke="#6C5846" strokeWidth={6} />
-    <path d="M 655,150 v -22 M 655,150 l 16,8" stroke="#4A3C30" strokeWidth={5} strokeLinecap="round" />
+    <g stroke="#4A3C30" strokeWidth={5} strokeLinecap="round">
+      <path d="M 655,150 v -24" transform={`rotate(${clock} 655 150)`} />
+      <path d="M 655,150 l 15,8" transform={`rotate(${clock / 12} 655 150)`} />
+    </g>
     <polygon filter="url(#ps)" points="738,610 992,610 1180,960 620,960" fill="#FFF3CF" opacity={0.1 + warm * 0.25} />
   </g>
 );
 
+const RBT: HeadProps = {kind: 'adult', skin: '#B77F5C', hair: '#2E211C', style: 'curly'};
+const Badge = (
+  <g>
+    <path d="M -34,2 L 0,118 L 34,2" stroke={C.orange} strokeWidth={6} fill="none" strokeLinejoin="round" />
+    <rect x={-44} y={108} width={88} height={54} rx={8} fill="#FBF8F1" stroke="#8A8377" strokeWidth={3} />
+    <text x={0} y={148} textAnchor="middle" fontFamily="Poppins, sans-serif" fontWeight={800} fontSize={32} fill={C.dark}>
+      RBT
+    </text>
+  </g>
+);
 const teacherHead: HeadProps = {kind: 'adult', skin: '#E8BB98', hair: '#8B7361', style: 'bob', glasses: true};
 const KID_A: HeadProps = {skin: '#C68E69', hair: '#2E211C', style: 'pigtails'};
 const KID_B: HeadProps = {skin: '#F1CBA8', hair: '#C98A3E', style: 'short'};
@@ -88,13 +103,13 @@ const BOY: HeadProps = {kind: 'child', skin: C.skinBoy, hair: C.hairBoy, style: 
 const MAN: HeadProps = {kind: 'adult', skin: C.skinBoy, hair: C.hairBoy, style: 'boy', freckles: true};
 const MOM: HeadProps = {kind: 'adult', skin: C.skinMom, hair: C.hairMom, style: 'bun', earrings: true};
 
-export const SceneClassroom: React.FC<{f: number; warm?: number; calm?: number}> = ({f, warm = 0, calm = 0}) => {
+export const SceneClassroom: React.FC<{f: number; warm?: number; calm?: number; clock?: number}> = ({f, warm = 0, calm = 0, clock = 0}) => {
   const k = 1 - calm * 0.6;
   const z = 1.04 + f * 0.0006;
   const turn = Math.sin(f / 21) * 0.6 * k;
   return (
     <Stage f={f} z={z} fx={540} fy={500}>
-      <ClassroomBG warm={warm} />
+      <ClassroomBG warm={warm} clock={clock} />
       {/* teacher */}
       <Figure
         x={300}
@@ -346,29 +361,12 @@ const SitBoy: React.FC<{x: number; y: number; s: number; f: number; up: number; 
 export const SceneHome: React.FC<{f: number}> = ({f}) => {
   const drop = clamp((f - 12) / 12);
   const bounce = f > 24 && f < 34 ? Math.sin(((f - 24) / 10) * Math.PI) * 10 : 0;
-  const sit = prog(f, 32, 48);
+  const sit = prog(f, 14, 50);
   return (
     <Stage f={f} z={1.0 + f * 0.0012} fx={lerp(540, 640, prog(f, 30, 120))} fy={500}>
       <HomeBG />
-      <g opacity={1 - sit}>
-        <Figure
-          x={400}
-          y={410}
-          s={0.72}
-          stripes
-          sleeve="short"
-          lean={2}
-          head={{...BOY, gy: 1, open: 0.5, mouth: -0.55, brow: 0.8}}
-          headDy={18}
-          headTilt={5}
-          armR={{e: [108, 96], h: [104, 190]}}
-          legs={{l: [-36, 400], r: [36, 400]}}
-        />
-      </g>
-      <Backpack x={lerp(490, 470, drop)} y={lerp(590, 742, drop * drop) - bounce} rot={lerp(4, 78, drop)} />
-      <g opacity={sit}>
-        <SitBoy x={770} y={610} s={0.86} f={f} up={0} />
-      </g>
+      <Backpack x={lerp(600, 560, drop)} y={lerp(640, 742, drop * drop) - bounce} rot={lerp(10, 78, drop)} />
+      <SitBoy x={770} y={610} s={0.86} f={f} up={1 - sit} mouth={-0.55} />
     </Stage>
   );
 };
@@ -437,8 +435,9 @@ export const SceneAdvocate: React.FC<{f: number}> = ({f}) => {
     y: 420,
     s: 0.74,
     kind: 'adult' as const,
-    top: '#5F7F9C',
-    head: {kind: 'adult' as const, skin: '#9B6C4D', hair: '#2B1E1A', style: 'flat' as const, turn: -0.35, gx: -0.6, brow: 0.15, mouth: 0.3, open: blink(f, 60)},
+    top: '#3F8F8A',
+    under: Badge,
+    head: {...RBT, turn: -0.35, gx: -0.6, brow: 0.15, mouth: 0.3, open: blink(f, 60)},
     headDy: Math.max(0, Math.sin(f / 7 + 2)) * 5,
     armL: {e: [-130, 170] as [number, number], h: [-40, 262] as [number, number]},
     armR: {e: [130, 170] as [number, number], h: [30, 262] as [number, number]},
@@ -607,7 +606,8 @@ export const SceneSupported: React.FC<{f: number}> = ({f}) => {
     kind: 'adult' as const,
     top: '#3F8F8A',
     skirt: 200,
-    head: {kind: 'adult' as const, skin: '#B77F5C', hair: '#2E211C', style: 'curly' as const, turn: 0.55, gx: 0.6, gy: lerp(0.5, 0, lookUp), mouth: lerp(0.5, 0.9, lookUp), mouthOpen: lookUp * 0.3, open: blink(f, 44)},
+    under: Badge,
+    head: {...RBT, turn: 0.55, gx: 0.6, gy: lerp(0.5, 0, lookUp), mouth: lerp(0.5, 0.9, lookUp), mouthOpen: lookUp * 0.3, open: blink(f, 44)},
     headTilt: 4,
     headDy: Math.max(0, Math.sin(f / 8)) * 4,
     armL: {e: [-140, 160] as [number, number], h: [-70, 270] as [number, number]},
@@ -819,7 +819,7 @@ export const OfficeScene: React.FC<{f: number; hopeful: boolean; cam: {z: number
 /** child face -> adult face -> pull back to the meeting */
 export const SceneGrowsUp: React.FC<{f: number; hopeful: boolean}> = ({f, hopeful}) => {
   const t0 = 20;
-  const t1 = 46;
+  const t1 = 54;
   const t2 = 104;
   const morph = prog(f, t0, t1);
   const pull = prog(f, t1 - 4, t2);
@@ -829,7 +829,7 @@ export const SceneGrowsUp: React.FC<{f: number; hopeful: boolean}> = ({f, hopefu
     <div style={{position: 'absolute', inset: 0}}>
       <OfficeScene f={f} hopeful={hopeful} cam={cam} a={a} />
       {morph < 1 && (
-        <div style={{position: 'absolute', inset: 0, opacity: 1 - morph}}>
+        <div style={{position: 'absolute', inset: 0, WebkitMaskImage: `linear-gradient(to right, transparent ${morph * 130 - 30}%, #000 ${morph * 130}%)`, maskImage: `linear-gradient(to right, transparent ${morph * 130 - 30}%, #000 ${morph * 130}%)`}}>
           <Stage f={f} id="cu" z={1 + f * 0.002} fx={540} fy={420}>
             <rect x={-600} y={-400} width={W + 1200} height={1800} fill={hopeful ? '#EBD8B4' : '#CFBEAB'} />
             <circle cx={540} cy={420} r={520} fill={hopeful ? '#FFF1C9' : '#B9A894'} opacity={0.35} />

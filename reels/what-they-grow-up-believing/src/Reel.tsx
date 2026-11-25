@@ -77,42 +77,15 @@ const TeacherWords: React.FC = () => {
   );
 };
 
-/** cinematic rewind: the heavy path plays backwards, fast */
-const Rewind: React.FC<{f: number}> = ({f}) => {
-  const N = 36;
-  if (f >= N) {
-    const settle = prog(f, N, N + 40);
-    return <SceneClassroom f={f - N} warm={settle > 0.5 ? 1 : 0} calm={1} />;
-  }
-  const seg = Math.floor(f / 9);
-  const l = f % 9;
-  const dx = lerp(-160, 160, l / 9);
-  return (
-    <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#CFC6B8'}}>
-      <svg width={0} height={0} style={{position: 'absolute'}}>
-        <filter id="hblur" x="-10%" width="120%">
-          <feGaussianBlur stdDeviation="22 0" />
-        </filter>
-      </svg>
-      <div style={{position: 'absolute', inset: 0, transform: `translateX(${dx}px) scale(1.12)`, filter: 'url(#hblur) saturate(0.6)'}}>
-        {seg === 0 && <OfficeScene f={170 - l * 6} hopeful={false} a={70 - l * 6} cam={{z: 1.05, fx: 540, fy: 480}} />}
-        {seg === 1 && <SceneHome f={110 - l * 8} />}
-        {seg === 2 && <SceneStruggle f={140 - l * 12} />}
-        {seg === 3 && <SceneClassroom f={100 - l * 8} />}
-      </div>
-      {Array.from({length: 9}).map((_, i) => {
-        const y = ((i * 137 + f * 53) % 960);
-        return <div key={i} style={{position: 'absolute', left: 0, right: 0, top: y, height: 3 + (i % 3) * 2, background: '#fff', opacity: 0.35}} />;
-      })}
-    </div>
-  );
-};
+/** rewind, gently: back in the same classroom, the clock turns backwards and the light warms */
+const Rewind: React.FC<{f: number}> = ({f}) => <SceneClassroom f={f} calm={1} clock={1080 * (1 - prog(f, 0, 62))} warm={prog(f, 34, 88)} />;
 
 const Slot: React.FC<{from: number; to: number; fade?: number; children: (f: number) => React.ReactNode}> = ({from, to, fade = 10, children}) => {
   const f = useCurrentFrame();
-  if (f < from - fade / 2 || f >= to + fade / 2) return null;
+  // stay underneath until the next scene has fully faded in on top (no gap, no flash)
+  if (f < from - fade / 2 || f >= to + 16) return null;
   const o = fade === 0 ? 1 : clamp((f - (from - fade / 2)) / fade);
-  return <div style={{position: 'absolute', inset: 0, opacity: o}}>{children(Math.max(0, f - from))}</div>;
+  return <div style={{position: 'absolute', inset: 0, opacity: o}}>{children(f - from + fade / 2)}</div>;
 };
 
 export const Reel: React.FC<{music?: boolean}> = ({music = true}) => {
@@ -142,15 +115,15 @@ export const Reel: React.FC<{music?: boolean}> = ({music = true}) => {
           }}
         >
           <Slot from={T.s1} to={T.s2} fade={0}>{(l) => <SceneClassroom f={l} />}</Slot>
-          <Slot from={T.s2} to={T.s3}>{(l) => <SceneStruggle f={l} />}</Slot>
-          <Slot from={T.s3} to={T.s4} fade={14}>{(l) => <SceneHome f={l} />}</Slot>
-          <Slot from={T.s4} to={T.s5} fade={14}>{(l) => <SceneGrowsUp f={l} hopeful={false} />}</Slot>
-          <Slot from={T.s5} to={T.s6} fade={4}>{(l) => <Rewind f={l} />}</Slot>
-          <Slot from={T.s6} to={T.s6 + 74} fade={14}>{(l) => <SceneBeside f={l} />}</Slot>
-          <Slot from={T.s6 + 74} to={T.s6 + 150} fade={12}>{(l) => <SceneAdvocate f={l} />}</Slot>
-          <Slot from={T.s6 + 150} to={T.s7} fade={12}>{(l) => <SceneNewSchool f={l} />}</Slot>
-          <Slot from={T.s7} to={T.s8} fade={12}>{(l) => <SceneSupported f={l} />}</Slot>
-          <Slot from={T.s8} to={T.s9 + 8} fade={14}>{(l) => <SceneGrowsUp f={l} hopeful />}</Slot>
+          <Slot from={T.s2} to={T.s3} fade={20}>{(l) => <SceneStruggle f={l} />}</Slot>
+          <Slot from={T.s3} to={T.s4} fade={22}>{(l) => <SceneHome f={l} />}</Slot>
+          <Slot from={T.s4} to={T.s5} fade={22}>{(l) => <SceneGrowsUp f={l} hopeful={false} />}</Slot>
+          <Slot from={T.s5} to={T.s6} fade={26}>{(l) => <Rewind f={l} />}</Slot>
+          <Slot from={T.s6} to={T.s6 + 74} fade={22}>{(l) => <SceneBeside f={l} />}</Slot>
+          <Slot from={T.s6 + 74} to={T.s6 + 150} fade={20}>{(l) => <SceneAdvocate f={l} />}</Slot>
+          <Slot from={T.s6 + 150} to={T.s7} fade={20}>{(l) => <SceneNewSchool f={l} />}</Slot>
+          <Slot from={T.s7} to={T.s8} fade={20}>{(l) => <SceneSupported f={l} />}</Slot>
+          <Slot from={T.s8} to={T.s9 + 8} fade={22}>{(l) => <SceneGrowsUp f={l} hopeful />}</Slot>
           {/* cool wash over the heavy half */}
           <div style={{position: 'absolute', inset: 0, background: '#4B5A73', opacity: 0.2 * (1 - warm), mixBlendMode: 'multiply'}} />
           <div style={{position: 'absolute', inset: 0, background: '#FFC88A', opacity: 0.1 * warm, mixBlendMode: 'soft-light'}} />
