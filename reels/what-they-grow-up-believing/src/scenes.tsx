@@ -9,8 +9,8 @@ export const Stage: React.FC<{f: number; z?: number; fx?: number; fy?: number; c
   <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{display: 'block', position: 'absolute', inset: 0}}>
     <defs>
       <filter id={`${id}w`} filterUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
-        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves={2} seed={(Math.floor(f / 5) % 3) + 2} result="n" />
-        <feDisplacementMap in="SourceGraphic" in2="n" scale={7} xChannelSelector="R" yChannelSelector="G" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves={2} seed={3} result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale={5} xChannelSelector="R" yChannelSelector="G" />
       </filter>
       <filter id={`${id}g`} filterUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
         <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves={3} seed={7} />
@@ -123,7 +123,7 @@ export const SceneClassroom: React.FC<{f: number; warm?: number; calm?: number}>
             headDy={16}
             headTilt={i ? -3 : 3}
             armL={{e: [-96, 120], h: [-40, 172]}}
-            armR={{e: [96, 120], h: [36 + Math.sin(f / 3 + i) * 5, 170]}}
+            armR={{e: [96, 120], h: [36 + Math.sin(f / 5.7 + i) * 5, 170]}}
             legs={{l: [-34, 400], r: [34, 400]}}
           />
           <Desk x={kd.x} y={644} w={230} h={24} legH={110} />
@@ -132,7 +132,7 @@ export const SceneClassroom: React.FC<{f: number; warm?: number; calm?: number}>
       {/* the boy */}
       <Figure
         x={560}
-        y={648 - Math.abs(Math.sin(f / 5)) * 4 * k}
+        y={648 - (0.5 + 0.5 * Math.sin(f / 6)) * 4 * k}
         s={0.8}
         stripes
         sleeve="short"
@@ -140,8 +140,8 @@ export const SceneClassroom: React.FC<{f: number; warm?: number; calm?: number}>
         head={{...BOY, turn, gx: turn * 1.3, gy: 0.1, brow: 0.55, mouth: -0.25, open: blink(f, 5, 60)}}
         headTilt={Math.sin(f / 9) * 5 * k}
         armL={{e: [-118, 118], h: [-58, 174]}}
-        armR={{e: [118, 112], h: [60 + Math.sin(f / 2.6) * 9 * k, 170 - Math.abs(Math.sin(f / 2.6)) * 16 * k]}}
-        legs={{l: [-38 + Math.sin(f / 3.4) * 34 * k, 360], r: [38 + Math.sin(f / 3.4 + 2.2) * 34 * k, 360]}}
+        armR={{e: [118, 112], h: [60 + Math.sin(f / 4.9) * 9 * k, 170 - Math.abs(Math.sin(f / 4.9)) * 16 * k]}}
+        legs={{l: [-38 + Math.sin(f / 6.5) * 34 * k, 360], r: [38 + Math.sin(f / 6.5 + 2.2) * 34 * k, 360]}}
       />
       <Desk x={560} y={792} w={330} h={30} legH={150} />
     </Stage>
@@ -176,11 +176,11 @@ export const SceneStruggle: React.FC<{f: number}> = ({f}) => {
     },
     headDy: down * 40 + flinch * 6,
     headTilt: down * 5 + Math.sin(f / 10) * 2 * (1 - down),
-    armL: {e: [-124, 120] as [number, number], h: [-60 + Math.sin(f / 4) * 6 * (1 - down), 170] as [number, number]},
-    armR: {e: [124, 120] as [number, number], h: [70 + (1 - roll) * Math.sin(f / 2.2) * 8, 170 - (1 - roll) * Math.abs(Math.sin(f / 2.2)) * 10] as [number, number]},
+    armL: {e: [-124, 120] as [number, number], h: [-60 + Math.sin(f / 7.6) * 6 * (1 - down), 170] as [number, number]},
+    armR: {e: [124, 120] as [number, number], h: [70 + (1 - roll) * Math.sin(f / 4.2) * 8, 170 - (1 - roll) * Math.abs(Math.sin(f / 4.2)) * 10] as [number, number]},
     legs: {
-      l: [-40 + Math.sin(f / 3.2) * 36 * (1 - down * 0.8), 300] as [number, number],
-      r: [40 + Math.sin(f / 3.2 + 2.1) * 36 * (1 - down * 0.8), 300] as [number, number],
+      l: [-40 + Math.sin(f / 6.1) * 36 * (1 - down * 0.8), 300] as [number, number],
+      r: [40 + Math.sin(f / 6.1 + 2.1) * 36 * (1 - down * 0.8), 300] as [number, number],
     },
   };
   return (
@@ -415,7 +415,7 @@ export const SceneAdvocate: React.FC<{f: number}> = ({f}) => {
     top: C.green,
     sleeve: 'short' as const,
     lean: 3,
-    head: {...MOM, turn: 0.55, gx: 0.6, brow: 0.1, mouth: 0.15, mouthOpen: 0.25 + 0.25 * Math.sin(f / 2.3), open: blink(f, 11)},
+    head: {...MOM, turn: 0.55, gx: 0.6, brow: 0.1, mouth: 0.15, mouthOpen: 0.25 + 0.25 * Math.sin(f / 4.4), open: blink(f, 11)},
     headTilt: Math.sin(f / 11) * 3,
     armL: {e: [-150, 150] as [number, number], h: [-40, 200] as [number, number]},
     armR: {e: [160, 190] as [number, number], h: [212 + Math.sin(f / 7) * 14, 112 + Math.cos(f / 7) * 12] as [number, number]},
@@ -429,7 +429,7 @@ export const SceneAdvocate: React.FC<{f: number}> = ({f}) => {
     lean: -3,
     head: {...teacherHead, turn: -0.5, gx: -0.6, brow: 0.2, mouth: 0.25, open: blink(f, 40)},
     headDy: nod,
-    armL: {e: [-150, 160] as [number, number], h: [-116 + Math.sin(f / 2) * 5, 204] as [number, number]},
+    armL: {e: [-150, 160] as [number, number], h: [-116 + Math.sin(f / 3.8) * 5, 204] as [number, number]},
     armR: {e: [150, 160] as [number, number], h: [40, 200] as [number, number]},
   };
   const coun = {
@@ -499,7 +499,7 @@ export const SceneAdvocate: React.FC<{f: number}> = ({f}) => {
 
 // ---------- scene 6c: toward a place where he can learn ----------
 export const SceneNewSchool: React.FC<{f: number}> = ({f}) => {
-  const bob = Math.sin(f / 4.5) * 5;
+  const bob = Math.sin(f / 8.5) * 5;
   return (
     <Stage f={f} z={1.0 + f * 0.0022} fx={540} fy={520}>
       <rect x={-600} y={-400} width={W + 1200} height={1100} fill="#F6E4C0" />
@@ -533,7 +533,7 @@ export const SceneNewSchool: React.FC<{f: number}> = ({f}) => {
         kind="adult"
         top="#3F8F8A"
         head={{kind: 'adult', skin: '#B77F5C', hair: '#2E211C', style: 'curly', mouth: 0.8, open: 1}}
-        armR={{e: [180, 20], h: [200 + Math.sin(f / 3) * 30, -130]}}
+        armR={{e: [180, 20], h: [200 + Math.sin(f / 5.7) * 30, -130]}}
         legs={{l: [-40, 500], r: [40, 500], color: '#5B5248', shoe: '#3A332E'}}
       />
       {/* path */}
@@ -574,7 +574,7 @@ export const SceneNewSchool: React.FC<{f: number}> = ({f}) => {
 export const SceneSupported: React.FC<{f: number}> = ({f}) => {
   const raise = prog(f, 96, 118);
   const lookUp = prog(f, 80, 94);
-  const bounce = Math.abs(Math.sin(f / 6)) * 7;
+  const bounce = (0.5 + 0.5 * Math.sin(f / 7)) * 6;
   const boy = {
     x: 660,
     y: 446 - bounce,
@@ -596,7 +596,7 @@ export const SceneSupported: React.FC<{f: number}> = ({f}) => {
     armL: {e: [-128, 118] as [number, number], h: [-70, 196] as [number, number]},
     armR: {
       e: [lerp(124, 176, raise), lerp(120, -10, raise)] as [number, number],
-      h: [lerp(50 + Math.sin(f / 2) * 7 * (1 - lookUp), 150, raise), lerp(198, -196, raise)] as [number, number],
+      h: [lerp(50 + Math.sin(f / 3.8) * 7 * (1 - lookUp), 150, raise), lerp(198, -196, raise)] as [number, number],
     },
     legs: {l: [-60, 420] as [number, number], r: [60, 420] as [number, number]},
   };
@@ -730,7 +730,7 @@ export const OfficeScene: React.FC<{f: number; hopeful: boolean; cam: {z: number
       turn: lerp(0.35, 0.6, listen),
       gx: 0.6,
       mouth: hopeful ? 0.3 + 0.4 * listen : 0.2,
-      mouthOpen: talkA * (0.3 + 0.3 * Math.sin(f / 2.1)),
+      mouthOpen: talkA * (0.3 + 0.3 * Math.sin(f / 4)),
       open: blink(f, 22),
       brow: 0,
     },
@@ -749,7 +749,7 @@ export const OfficeScene: React.FC<{f: number; hopeful: boolean; cam: {z: number
       turn: hopeful ? lerp(-0.3, 0.55, listen) : -0.35,
       gx: hopeful ? lerp(-0.5, 0.6, listen) : -0.6,
       mouth: hopeful ? 0.25 + 0.35 * listen : 0.15,
-      mouthOpen: talkB * (0.3 + 0.3 * Math.sin(f / 2.4)),
+      mouthOpen: talkB * (0.3 + 0.3 * Math.sin(f / 4.6)),
       open: blink(f, 50),
     },
     armL: {e: [-140, lerp(170, 150, talkB)] as [number, number], h: [lerp(-50, -130 + Math.sin(f / 5) * 10, talkB), lerp(222, 130, talkB)] as [number, number]},
@@ -771,7 +771,7 @@ export const OfficeScene: React.FC<{f: number; hopeful: boolean; cam: {z: number
       open: Math.min(blink(f, 3, 66), hopeful ? 1 : lerp(0.66, 0.9, half)),
       brow: hopeful ? -0.05 : 0.7,
       mouth: hopeful ? 0.55 : -0.4,
-      mouthOpen: hopeful ? speak * (0.3 + 0.28 * Math.sin(f / 2.2)) : half * 0.18,
+      mouthOpen: hopeful ? speak * (0.3 + 0.28 * Math.sin(f / 4.2)) : half * 0.18,
     },
     headDy: hopeful ? 0 : lerp(14, 6, half),
     headTilt: hopeful ? 0 : 3,
